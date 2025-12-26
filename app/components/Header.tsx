@@ -1,4 +1,6 @@
-export default function Header() {
+import { JSX } from "react";
+
+export default function Header(): JSX.Element {
   return (
     <header>
       <h1>Assembly: Endgame</h1>
