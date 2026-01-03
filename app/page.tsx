@@ -23,6 +23,7 @@ export default function AssemblyEndgame(): JSX.Element {
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
   const [isTimeUp, setIsTimeUp] = useState<boolean>(false);
   const [gameKey, setGameKey] = useState<number>(0);
+  const [hasStarted, setHasStarted] = useState<boolean>(false);
 
   // Derived values
   const numGuessesLeft: number = languages.length - 1;
@@ -35,9 +36,8 @@ export default function AssemblyEndgame(): JSX.Element {
   const isGameLost: boolean = wrongGuessCount >= numGuessesLeft || isTimeUp;
   const isGameOver: boolean = isGameWon || isGameLost;
   const lastGuessedLetter: string = guessedLetters[guessedLetters.length - 1];
-  const isLastGuessIncorrect: boolean = Boolean(
-    lastGuessedLetter && !currentWord.includes(lastGuessedLetter)
-  );
+  const isLastGuessIncorrect: boolean =
+    guessedLetters.length > 0 && !currentWord.includes(lastGuessedLetter);
 
   // Static values
   const alphabet: string = "abcdefghijklmnopqrstuvwxyz";
@@ -46,13 +46,18 @@ export default function AssemblyEndgame(): JSX.Element {
     setGuessedLetters((prevLetters: string[]): string[] =>
       prevLetters.includes(letter) ? prevLetters : [...prevLetters, letter]
     );
+    // Start timer on first guess
+    if (!hasStarted) {
+      setHasStarted(true);
+    }
   }
 
   function startNewGame(): void {
     setCurrentWord(getRandomWord());
     setGuessedLetters([]);
     setIsTimeUp(false);
-    setGameKey((prev) => prev + 1); // Increment key untuk reset timer
+    setHasStarted(false); // Reset timer start status
+    setGameKey((prev: number): number => prev + 1); // Increment key untuk reset timer
   }
 
   function handleTimeUp(): void {
@@ -69,6 +74,7 @@ export default function AssemblyEndgame(): JSX.Element {
         isGameOver={isGameOver}
         onTimeUp={handleTimeUp}
         initialTime={60} // 60 detik, bisa diubah sesuai keinginan
+        hasStarted={hasStarted} // Timer hanya jalan setelah tebakan pertama
       />
 
       <GameStatus
