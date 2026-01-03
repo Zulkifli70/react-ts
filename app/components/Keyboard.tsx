@@ -3,7 +3,7 @@ import { JSX } from "react";
 
 type KeyboardProps = {
   alphabet: string;
-  guessedLetters: string;
+  guessedLetters: string[];
   currentWord: string;
   isGameOver: boolean;
   addGuessedLetter: (letter: string) => void;

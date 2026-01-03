@@ -3,7 +3,7 @@ import { JSX } from "react";
 
 type WordLettersProps = {
   currentWord: string;
-  guessedLetters: string;
+  guessedLetters: string[];
   isGameLost: boolean;
 };
 
