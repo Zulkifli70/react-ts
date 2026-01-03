@@ -4,12 +4,14 @@ type TimerProps = {
   isGameOver: boolean;
   onTimeUp: () => void;
   initialTime?: number;
+  hasStarted: boolean; // ← Add this line
 };
 
 export default function Timer({
   isGameOver,
   onTimeUp,
   initialTime = 60,
+  hasStarted, // ← Add this to destructuring
 }: TimerProps) {
   const [timeLeft, setTimeLeft] = useState(initialTime);
 
@@ -19,8 +21,8 @@ export default function Timer({
   }, [initialTime]);
 
   useEffect(() => {
-    // Don't run timer if game is over
-    if (isGameOver || timeLeft <= 0) return;
+    // Don't run timer if game hasn't started, is over, or time is up
+    if (!hasStarted || isGameOver || timeLeft <= 0) return; // ← Use hasStarted here
 
     // Set up interval to decrease time
     const timerId = setInterval(() => {
@@ -35,7 +37,7 @@ export default function Timer({
 
     // Cleanup interval on unmount
     return () => clearInterval(timerId);
-  }, [isGameOver, timeLeft, onTimeUp]);
+  }, [hasStarted, isGameOver, timeLeft, onTimeUp]); // ← Add hasStarted to dependency array
 
   // Format time as MM:SS
   const minutes = Math.floor(timeLeft / 60);
@@ -51,8 +53,7 @@ export default function Timer({
 
   return (
     <div className="timer-box">
-      {" "}
-      <h2>Game Time </h2>
+      <h2>Game Time</h2>
       <div
         style={{
           fontSize: "2rem",
