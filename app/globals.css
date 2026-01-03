@@ -179,3 +179,9 @@ button.new-game {
   white-space: nowrap;
   border: 0;
 }
+
+.timer-box {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 1em 2em;
+  border-radius: 1em;
+}

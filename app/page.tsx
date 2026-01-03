@@ -12,6 +12,7 @@ import WordLetters from "./components/WordLetters";
 import AriaLiveStatus from "./components/AriaLiveStatus";
 import Keyboard from "./components/Keyboard";
 import NewGameButton from "./components/NewGameButton";
+import Timer from "./components/Timer";
 
 export default function AssemblyEndgame() {
   // State values
@@ -19,6 +20,7 @@ export default function AssemblyEndgame() {
     getRandomWord()
   );
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
+  const [isTimeUp, setIsTimeUp] = useState<boolean>(false);
 
   // Derived values
   const numGuessesLeft: number = languages.length - 1;
@@ -28,7 +30,7 @@ export default function AssemblyEndgame() {
   const isGameWon: boolean = currentWord
     .split("")
     .every((letter: string): boolean => guessedLetters.includes(letter));
-  const isGameLost: boolean = wrongGuessCount >= numGuessesLeft;
+  const isGameLost: boolean = wrongGuessCount >= numGuessesLeft || isTimeUp;
   const isGameOver: boolean = isGameWon || isGameLost;
   const lastGuessedLetter: string = guessedLetters[guessedLetters.length - 1];
   const isLastGuessIncorrect: string | boolean =
@@ -46,12 +48,23 @@ export default function AssemblyEndgame() {
   function startNewGame(): void {
     setCurrentWord(getRandomWord());
     setGuessedLetters([]);
+    setIsTimeUp(false);
+  }
+
+  function handleTimeUp(): void {
+    setIsTimeUp(true);
   }
 
   return (
     <main>
       <ConfettiContainer isGameWon={isGameWon} />
       <Header />
+
+      <Timer
+        isGameOver={isGameOver}
+        onTimeUp={handleTimeUp}
+        initialTime={10} // 60 detik, bisa diubah sesuai keinginan
+      />
 
       <GameStatus
         isGameWon={isGameWon}
